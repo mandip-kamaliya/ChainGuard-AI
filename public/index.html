@@ -21,6 +21,27 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        .btn {
+            transition: all 0.2s ease;
+        }
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+        .card {
+            transition: all 0.2s ease;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen text-white">
@@ -53,7 +74,7 @@
     <main class="container mx-auto px-6 pb-12">
         <!-- Stats Dashboard -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div class="glass-effect p-6 rounded-xl">
+            <div class="glass-effect p-6 rounded-xl card">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-300 text-sm">Contracts Monitored</p>
@@ -62,7 +83,7 @@
                     <i class="fas fa-file-contract text-2xl text-blue-400"></i>
                 </div>
             </div>
-            <div class="glass-effect p-6 rounded-xl">
+            <div class="glass-effect p-6 rounded-xl card">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-300 text-sm">Security Reports</p>
@@ -71,7 +92,7 @@
                     <i class="fas fa-chart-line text-2xl text-green-400"></i>
                 </div>
             </div>
-            <div class="glass-effect p-6 rounded-xl">
+            <div class="glass-effect p-6 rounded-xl card">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-300 text-sm">Critical Alerts</p>
@@ -80,7 +101,7 @@
                     <i class="fas fa-exclamation-triangle text-2xl text-red-400"></i>
                 </div>
             </div>
-            <div class="glass-effect p-6 rounded-xl">
+            <div class="glass-effect p-6 rounded-xl card">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-300 text-sm">Last Check</p>
@@ -92,7 +113,7 @@
         </div>
 
         <!-- Control Panel -->
-        <div class="glass-effect p-6 rounded-xl mb-8">
+        <div class="glass-effect p-6 rounded-xl mb-8 card">
             <h2 class="text-xl font-bold mb-4 flex items-center">
                 <i class="fas fa-cogs mr-2"></i>
                 Control Panel
@@ -105,11 +126,11 @@
                             type="text" 
                             id="contractAddress" 
                             placeholder="0x..." 
-                            class="flex-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:border-purple-400"
+                            class="flex-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/50 transition-all"
                         >
                         <button 
                             onclick="monitorContract()" 
-                            class="px-6 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg font-medium transition-colors"
+                            class="btn px-6 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg font-medium transition-all"
                         >
                             <i class="fas fa-search mr-2"></i>Analyze
                         </button>
@@ -121,14 +142,14 @@
                         <button 
                             onclick="startContinuousMonitoring()" 
                             id="startBtn"
-                            class="flex-1 px-6 py-2 bg-green-600 hover:bg-green-700 rounded-lg font-medium transition-colors"
+                            class="btn flex-1 px-6 py-2 bg-green-600 hover:bg-green-700 rounded-lg font-medium transition-all"
                         >
                             <i class="fas fa-play mr-2"></i>Start
                         </button>
                         <button 
                             onclick="stopContinuousMonitoring()" 
                             id="stopBtn"
-                            class="flex-1 px-6 py-2 bg-red-600 hover:bg-red-700 rounded-lg font-medium transition-colors"
+                            class="btn flex-1 px-6 py-2 bg-red-600 hover:bg-red-700 rounded-lg font-medium transition-all"
                             disabled
                         >
                             <i class="fas fa-stop mr-2"></i>Stop
@@ -139,7 +160,7 @@
         </div>
 
         <!-- Alerts Section -->
-        <div class="glass-effect p-6 rounded-xl mb-8">
+        <div class="glass-effect p-6 rounded-xl mb-8 card">
             <h2 class="text-xl font-bold mb-4 flex items-center">
                 <i class="fas fa-bell mr-2"></i>
                 Security Alerts
@@ -151,7 +172,7 @@
         </div>
 
         <!-- Recent Reports -->
-        <div class="glass-effect p-6 rounded-xl">
+        <div class="glass-effect p-6 rounded-xl card">
             <h2 class="text-xl font-bold mb-4 flex items-center">
                 <i class="fas fa-file-alt mr-2"></i>
                 Recent Security Reports
