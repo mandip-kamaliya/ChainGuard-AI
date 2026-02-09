@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChainGuard AI - Autonomous Security Agent</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes pulse-red {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+        .animate-pulse-red {
+            animation: pulse-red 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen text-white">
+    <!-- Header -->
+    <header class="glass-effect p-6 mb-8">
+        <div class="container mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <i class="fas fa-shield-alt text-3xl text-purple-400"></i>
+                <div>
+                    <h1 class="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
+                        ChainGuard AI
+                    </h1>
+                    <p class="text-sm text-gray-300">Autonomous Smart Contract Security Agent for BNB Chain</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div id="connectionStatus" class="flex items-center space-x-2">
+                    <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                    <span class="text-sm">Disconnected</span>
+                </div>
+                <div id="monitoringStatus" class="flex items-center space-x-2">
+                    <div class="w-3 h-3 bg-gray-500 rounded-full"></div>
+                    <span class="text-sm">Inactive</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 pb-12">
+        <!-- Stats Dashboard -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="glass-effect p-6 rounded-xl">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-300 text-sm">Contracts Monitored</p>
+                        <p id="contractsCount" class="text-2xl font-bold">0</p>
+                    </div>
+                    <i class="fas fa-file-contract text-2xl text-blue-400"></i>
+                </div>
+            </div>
+            <div class="glass-effect p-6 rounded-xl">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-300 text-sm">Security Reports</p>
+                        <p id="reportsCount" class="text-2xl font-bold">0</p>
+                    </div>
+                    <i class="fas fa-chart-line text-2xl text-green-400"></i>
+                </div>
+            </div>
+            <div class="glass-effect p-6 rounded-xl">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-300 text-sm">Critical Alerts</p>
+                        <p id="criticalCount" class="text-2xl font-bold text-red-400">0</p>
+                    </div>
+                    <i class="fas fa-exclamation-triangle text-2xl text-red-400"></i>
+                </div>
+            </div>
+            <div class="glass-effect p-6 rounded-xl">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-300 text-sm">Last Check</p>
+                        <p id="lastCheck" class="text-sm">Never</p>
+                    </div>
+                    <i class="fas fa-clock text-2xl text-purple-400"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Control Panel -->
+        <div class="glass-effect p-6 rounded-xl mb-8">
+            <h2 class="text-xl font-bold mb-4 flex items-center">
+                <i class="fas fa-cogs mr-2"></i>
+                Control Panel
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Contract Address</label>
+                    <div class="flex space-x-2">
+                        <input 
+                            type="text" 
+                            id="contractAddress" 
+                            placeholder="0x..." 
+                            class="flex-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:border-purple-400"
+                        >
+                        <button 
+                            onclick="monitorContract()" 
+                            class="px-6 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg font-medium transition-colors"
+                        >
+                            <i class="fas fa-search mr-2"></i>Analyze
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Continuous Monitoring</label>
+                    <div class="flex space-x-2">
+                        <button 
+                            onclick="startContinuousMonitoring()" 
+                            id="startBtn"
+                            class="flex-1 px-6 py-2 bg-green-600 hover:bg-green-700 rounded-lg font-medium transition-colors"
+                        >
+                            <i class="fas fa-play mr-2"></i>Start
+                        </button>
+                        <button 
+                            onclick="stopContinuousMonitoring()" 
+                            id="stopBtn"
+                            class="flex-1 px-6 py-2 bg-red-600 hover:bg-red-700 rounded-lg font-medium transition-colors"
+                            disabled
+                        >
+                            <i class="fas fa-stop mr-2"></i>Stop
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alerts Section -->
+        <div class="glass-effect p-6 rounded-xl mb-8">
+            <h2 class="text-xl font-bold mb-4 flex items-center">
+                <i class="fas fa-bell mr-2"></i>
+                Security Alerts
+                <span id="alertBadge" class="ml-2 px-2 py-1 bg-red-500 text-xs rounded-full hidden">0</span>
+            </h2>
+            <div id="alertsContainer" class="space-y-3 max-h-96 overflow-y-auto">
+                <p class="text-gray-400 text-center py-8">No security alerts yet</p>
+            </div>
+        </div>
+
+        <!-- Recent Reports -->
+        <div class="glass-effect p-6 rounded-xl">
+            <h2 class="text-xl font-bold mb-4 flex items-center">
+                <i class="fas fa-file-alt mr-2"></i>
+                Recent Security Reports
+            </h2>
+            <div id="reportsContainer" class="space-y-3">
+                <p class="text-gray-400 text-center py-8">No reports yet</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const socket = io();
+        let alerts = [];
+        let reports = [];
+
+        // Socket event handlers
+        socket.on('connect', () => {
+            updateConnectionStatus(true);
+            console.log('Connected to ChainGuard AI server');
+        });
+
+        socket.on('disconnect', () => {
+            updateConnectionStatus(false);
+        });
+
+        socket.on('monitoringStatus', (data) => {
+            updateMonitoringStatus(data.isActive);
+        });
+
+        socket.on('securityUpdate', (data) => {
+            if (data.type === 'newReport') {
+                addReport(data.data);
+                updateStats();
+            }
+        });
+
+        socket.on('alerts', (data) => {
+            alerts = data;
+            renderAlerts();
+        });
+
+        // UI Functions
+        function updateConnectionStatus(connected) {
+            const status = document.getElementById('connectionStatus');
+            const dot = status.querySelector('div');
+            const text = status.querySelector('span');
+            
+            if (connected) {
+                dot.className = 'w-3 h-3 bg-green-500 rounded-full';
+                text.textContent = 'Connected';
+            } else {
+                dot.className = 'w-3 h-3 bg-red-500 rounded-full';
+                text.textContent = 'Disconnected';
+            }
+        }
+
+        function updateMonitoringStatus(isActive) {
+            const status = document.getElementById('monitoringStatus');
+            const dot = status.querySelector('div');
+            const text = status.querySelector('span');
+            const startBtn = document.getElementById('startBtn');
+            const stopBtn = document.getElementById('stopBtn');
+            
+            if (isActive) {
+                dot.className = 'w-3 h-3 bg-green-500 rounded-full animate-pulse';
+                text.textContent = 'Active';
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+            } else {
+                dot.className = 'w-3 h-3 bg-gray-500 rounded-full';
+                text.textContent = 'Inactive';
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+            }
+        }
+
+        async function monitorContract() {
+            const address = document.getElementById('contractAddress').value.trim();
+            if (!address) {
+                showNotification('Please enter a contract address', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/monitor', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ contractAddress: address })
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showNotification(`Contract analysis started for ${address}`, 'success');
+                    addReport(result);
+                    updateStats();
+                } else {
+                    showNotification(result.error || 'Analysis failed', 'error');
+                }
+            } catch (error) {
+                showNotification('Failed to analyze contract', 'error');
+            }
+        }
+
+        async function startContinuousMonitoring() {
+            try {
+                const response = await fetch('/api/start-continuous', {
+                    method: 'POST'
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showNotification('Continuous monitoring started', 'success');
+                } else {
+                    showNotification(result.error || 'Failed to start monitoring', 'error');
+                }
+            } catch (error) {
+                showNotification('Failed to start monitoring', 'error');
+            }
+        }
+
+        async function stopContinuousMonitoring() {
+            try {
+                const response = await fetch('/api/stop-continuous', {
+                    method: 'POST'
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showNotification('Continuous monitoring stopped', 'info');
+                } else {
+                    showNotification(result.error || 'Failed to stop monitoring', 'error');
+                }
+            } catch (error) {
+                showNotification('Failed to stop monitoring', 'error');
+            }
+        }
+
+        function addReport(report) {
+            reports.unshift(report);
+            if (reports.length > 10) reports = reports.slice(0, 10);
+            renderReports();
+        }
+
+        function renderReports() {
+            const container = document.getElementById('reportsContainer');
+            
+            if (reports.length === 0) {
+                container.innerHTML = '<p class="text-gray-400 text-center py-8">No reports yet</p>';
+                return;
+            }
+
+            container.innerHTML = reports.map(report => `
+                <div class="bg-white/5 border border-white/10 rounded-lg p-4">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-2 mb-2">
+                                <span class="px-2 py-1 text-xs rounded-full ${getRiskLevelClass(report.analysis.riskLevel)}">
+                                    ${report.analysis.riskLevel}
+                                </span>
+                                <span class="text-sm text-gray-400">
+                                    ${new Date().toLocaleTimeString()}
+                                </span>
+                            </div>
+                            <p class="font-mono text-sm mb-2">${report.contractAddress}</p>
+                            <p class="text-sm text-gray-300">${report.analysis.vulnerabilityType}</p>
+                            <p class="text-xs text-gray-400 mt-1">${report.analysis.description}</p>
+                        </div>
+                        <a href="https://testnet.bscscan.com/tx/${report.transactionHash}" 
+                           target="_blank" 
+                           class="text-purple-400 hover:text-purple-300">
+                            <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderAlerts() {
+            const container = document.getElementById('alertsContainer');
+            const badge = document.getElementById('alertBadge');
+            
+            const criticalAlerts = alerts.filter(a => a.riskLevel === 'CRITICAL');
+            
+            if (criticalAlerts.length === 0) {
+                container.innerHTML = '<p class="text-gray-400 text-center py-8">No security alerts yet</p>';
+                badge.classList.add('hidden');
+                return;
+            }
+
+            badge.textContent = criticalAlerts.length;
+            badge.classList.remove('hidden');
+
+            container.innerHTML = criticalAlerts.map(alert => `
+                <div class="bg-red-500/10 border border-red-500/30 rounded-lg p-4 animate-pulse-red">
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-exclamation-triangle text-red-400 mt-1"></i>
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-2 mb-1">
+                                <span class="font-semibold">CRITICAL VULNERABILITY DETECTED</span>
+                                <span class="text-xs text-gray-400">${new Date(alert.timestamp).toLocaleString()}</span>
+                            </div>
+                            <p class="font-mono text-sm mb-1">${alert.contract}</p>
+                            <p class="text-sm mb-1">${alert.vulnerability}</p>
+                            <p class="text-xs text-gray-300">${alert.description}</p>
+                            <p class="text-xs text-yellow-400 mt-2">${alert.action}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getRiskLevelClass(level) {
+            const classes = {
+                'LOW': 'bg-green-500/20 text-green-400',
+                'MEDIUM': 'bg-yellow-500/20 text-yellow-400',
+                'HIGH': 'bg-orange-500/20 text-orange-400',
+                'CRITICAL': 'bg-red-500/20 text-red-400'
+            };
+            return classes[level] || 'bg-gray-500/20 text-gray-400';
+        }
+
+        function updateStats() {
+            document.getElementById('contractsCount').textContent = reports.length;
+            document.getElementById('reportsCount').textContent = reports.length;
+            document.getElementById('criticalCount').textContent = alerts.filter(a => a.riskLevel === 'CRITICAL').length;
+            document.getElementById('lastCheck').textContent = new Date().toLocaleTimeString();
+        }
+
+        function showNotification(message, type = 'info') {
+            const colors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                info: 'bg-blue-500'
+            };
+
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 ${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg z-50 transition-opacity duration-300`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Initialize
+        updateStats();
+        fetch('/api/status').then(res => res.json()).then(data => {
+            if (data.monitoring) {
+                updateMonitoringStatus(data.monitoring.isActive);
+            }
+        });
+    </script>
+</body>
+</html>
