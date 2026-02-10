@@ -132,7 +132,7 @@ contract VerifyScript is Script {
         return result;
     }
     
-    function _verifyChainGuard() internal view {
+    function _verifyChainGuard() public view {
         // Verify ChainGuard contract functionality
         require(address(chainGuard) != address(0), "ChainGuard not deployed");
         
@@ -162,7 +162,7 @@ contract VerifyScript is Script {
         console.log("  AuditNFT:", nft);
     }
     
-    function _verifySecurityRegistry() internal view {
+    function _verifySecurityRegistry() public view {
         // Verify SecurityRegistry contract functionality
         require(address(securityRegistry) != address(0), "SecurityRegistry not deployed");
         
@@ -185,7 +185,7 @@ contract VerifyScript is Script {
         console.log("  ChainGuard monitored:", isMonitored);
     }
     
-    function _verifyAuditNFT() internal view {
+    function _verifyAuditNFT() public view {
         // Verify AuditNFT contract functionality
         require(address(auditNFT) != address(0), "AuditNFT not deployed");
         
@@ -198,11 +198,6 @@ contract VerifyScript is Script {
         address registry = auditNFT.securityRegistry();
         require(registry != address(0), "Invalid security registry");
         console.log("  Security registry:", registry);
-        
-        // Check base URI
-        string memory baseURI = auditNFT.baseTokenURI();
-        require(bytes(baseURI).length > 0, "Invalid base URI");
-        console.log("  Base URI:", baseURI);
         
         // Check total supply
         uint256 totalSupply = auditNFT.getValidCertificatesCount();
@@ -230,7 +225,7 @@ contract VerifyScript is Script {
         console.log("  Please verify manually on the block explorer if needed");
     }
     
-    function _getVerificationUrl() internal view returns (string memory) {
+    function _getVerificationUrl() public view returns (string memory) {
         // Generate verification URL based on current chain
         uint256 chainId = block.chainid;
         
@@ -287,7 +282,7 @@ contract VerifyScript is Script {
         console.log("AuditNFT verified:", result.auditNFTVerified ? "YES" : "NO");
         console.log("BSCScan verification:", result.bscscanVerified ? "YES" : "NO");
         
-        if (result.verificationUrl.length > 0) {
+        if (bytes(result.verificationUrl).length > 0) {
             console.log("Verification URL:", result.verificationUrl);
         }
         
@@ -384,7 +379,7 @@ contract VerifyScript is Script {
         vm.serializeUint(report, "timestamp", block.timestamp);
         vm.serializeString(report, "verificationUrl", result.verificationUrl);
         
-        string memory finalReport = vm.serialize(report);
+        string memory finalReport = vm.serializeString(report, "status", "complete");
         
         // Save report
         string memory filename = string.concat("./verification_reports/", vm.toString(block.timestamp), ".json");

@@ -2,6 +2,7 @@
 pragma solidity ^0.8.19;
 
 import "forge-std/Script.sol";
+import "forge-std/console.sol";
 import "../src/ChainGuard.sol";
 import "../src/SecurityRegistry.sol";
 import "../src/AuditNFT.sol";
@@ -48,15 +49,15 @@ contract InteractScript is Script {
         address deployer = vm.addr(deployerPrivateKey);
         
         // Test contract addresses
-        address[5] memory testContracts = [
-            0x742d35Cc6634C0532925a3b8D4C9db96C4b4Db45, // BSC testnet contract
-            0x8Ba1f109551bD4328030126458ac136c22C56Bf532, // Mock contract
-            0x1234567890123456789012345678901234567890, // Random address
-            0x9876543210987654321098765432109876543210, // Random address
-            0xABCDEF1234567890123456789012345678901234  // Random address
-        ];
+        address[] storage testContracts;
         
         vm.startBroadcast(deployerPrivateKey);
+        
+        testContracts.push(address(0x742D35cC6634C0532925a3B8d4c9dB96c4b4dB45)); // BSC testnet contract
+        testContracts.push(address(0x8Ba1F109551Bd432803012645ac136c22C56BF53)); // Mock contract
+        testContracts.push(address(0x1234567890123456789012345678901234567890)); // Random address
+        testContracts.push(address(0x9876543210987654321098765432109876543210)); // Random address
+        testContracts.push(address(0)); // Zero address for testing
         
         for (uint256 i = 0; i < testContracts.length; i++) {
             address contractAddr = testContracts[i];
@@ -87,7 +88,7 @@ contract InteractScript is Script {
                 console.log("Registration failed:", reason);
             } catch (bytes memory lowLevelData) {
                 console.log("Registration failed with low-level error");
-                console.log("  Error data:", lowLevelData);
+                console.log("  Error data: (low-level revert)");
             }
         }
         
@@ -103,7 +104,7 @@ contract InteractScript is Script {
         address deployer = vm.addr(deployerPrivateKey);
         
         // Test contract with bytecode
-        address testContract = 0x742d35Cc6634C0532925a3b8D4C9db96C4b4Db45;
+        address testContract = 0x742D35cC6634C0532925a3B8d4c9dB96c4b4dB45;
         
         // First register the contract
         vm.startBroadcast(deployerPrivateKey);
@@ -150,7 +151,7 @@ contract InteractScript is Script {
                 console.log("Vulnerability scan failed:", reason);
             } catch (bytes memory lowLevelData) {
                 console.log("Vulnerability scan failed with low-level error");
-                console.log("  Error data:", lowLevelData);
+                console.log("  Error data: (low-level revert)");
             }
             
         } catch Error(string memory reason) {
@@ -168,12 +169,12 @@ contract InteractScript is Script {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         address deployer = vm.addr(deployerPrivateKey);
         
-        address testContract = 0x742d35Cc6634C0532925a3b8D4C9db96C4b4Db45;
+        address testContract = 0x742D35cC6634C0532925a3B8d4c9dB96c4b4dB45;
         
         vm.startBroadcast(deployerPrivateKey);
         
         // Test pause functionality
-        try chainGuard.pauseContract(testContract) {
+        try securityRegistry.pauseContract(testContract) {
             console.log("Contract paused successfully");
             
             // Check pause status
@@ -181,7 +182,7 @@ contract InteractScript is Script {
             console.log("  - Is paused:", isPaused);
             
             // Test unpause
-            try chainGuard.unpauseContract(testContract) {
+            try securityRegistry.unpauseContract(testContract) {
                 console.log("Contract unpaused successfully");
                 
                 // Check pause status again
@@ -205,7 +206,7 @@ contract InteractScript is Script {
         _loadDeployedContracts();
         
         // Test getting reports for a contract
-        address testContract = 0x742d35Cc6634C0532925a3b8D4C9db96C4b4Db45;
+        address testContract = 0x742D35cC6634C0532925a3B8d4c9dB96c4b4dB45;
         
         try chainGuard.getContractCertificates(testContract) returns (uint256[] memory certificateIds) {
             console.log("Retrieved certificates for contract");
@@ -282,7 +283,7 @@ contract InteractScript is Script {
         }
         
         // Test individual contract monitoring status
-        address testContract = 0x742d35Cc6634C0532925a3b8D4C9db96C4b4Db45;
+        address testContract = 0x742D35cC6634C0532925a3B8d4c9dB96c4b4dB45;
         
         try chainGuard.getMonitoringStatus(testContract) returns (
             bool isActive,

@@ -152,14 +152,14 @@ contract DeployScript is Script {
     function _saveDeploymentInfo(DeploymentInfo memory info) internal {
         // Create JSON string with deployment information
         string memory json = "deployment";
-        vm.serializeAddress(json, "securityRegistry", info.securityRegistry);
-        vm.serializeAddress(json, "auditNFT", info.auditNFT);
-        vm.serializeAddress(json, "chainGuard", info.chainGuard);
-        vm.serializeAddress(json, "deployer", info.deployer);
-        vm.serializeUint(json, "chainId", info.chainId);
-        vm.serializeUint(json, "timestamp", info.timestamp);
+        json = vm.serializeAddress(json, "securityRegistry", info.securityRegistry);
+        json = vm.serializeAddress(json, "auditNFT", info.auditNFT);
+        json = vm.serializeAddress(json, "chainGuard", info.chainGuard);
+        json = vm.serializeAddress(json, "deployer", info.deployer);
+        json = vm.serializeUint(json, "chainId", info.chainId);
+        json = vm.serializeUint(json, "timestamp", info.timestamp);
         
-        string memory finalJson = vm.serialize("deployment", json);
+        string memory finalJson = json;
         
         // Create deployments directory if it doesn't exist
         string memory chainName = _getChainName(info.chainId);
@@ -183,7 +183,7 @@ contract DeployScript is Script {
         
         // Verify NFT configuration
         console.log("AuditNFT security registry:", AuditNFT(info.auditNFT).securityRegistry());
-        console.log("AuditNFT base URI:", AuditNFT(info.auditNFT).baseTokenURI());
+        console.log("AuditNFT owner:", AuditNFT(info.auditNFT).owner());
         
         // Verify system stats
         (uint256 totalContracts, uint256 totalScans, uint256 activeContracts) = 
