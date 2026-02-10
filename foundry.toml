@@ -18,7 +18,11 @@ int_types = "long"
 [rpc_endpoints]
 bsc_testnet = "https://data-seed-prebsc-1-s1.binance.org:8545/"
 bsc_mainnet = "https://bsc-dataseed.binance.org/"
+opbnb_testnet = "https://opbnb-testnet-rpc.bnbchain.org"
+opbnb_mainnet = "https://opbnb-mainnet-rpc.bnbchain.org"
 
 [etherscan]
 bsc_testnet = { key = "${BSCSCAN_API_KEY}" }
 bsc_mainnet = { key = "${BSCSCAN_API_KEY}" }
+opbnb_testnet = { key = "${BSCSCAN_API_KEY}", url = "https://api-opbnb-testnet.bscscan.com/api" }
+opbnb_mainnet = { key = "${BSCSCAN_API_KEY}", url = "https://api-opbnb.bscscan.com/api" }
