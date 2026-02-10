@@ -4,15 +4,14 @@ pragma solidity ^0.8.19;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 /// @title AuditNFT
 /// @notice ERC721 contract that mints audit certificates for vulnerability reports
 /// @dev Each NFT represents a completed security audit with metadata stored on IPFS
 /// @author ChainGuard AI Team
 contract AuditNFT is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard {
-    using Counters for Counters.Counter;
+    uint256 private _tokenIdCounter;
     
     /// @dev Struct to store audit certificate metadata
     struct AuditCertificate {
@@ -48,12 +47,12 @@ contract AuditNFT is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard {
     event MetadataUpdated(uint256 indexed tokenId, string newTokenURI);
     
     // State variables
-    Counters.Counter private _tokenIdCounter;
     mapping(uint256 => AuditCertificate) public certificates;
+    mapping(address => uint256[]) public contractCertificates;
     mapping(uint256 => bool) public validCertificates;
     
     address public securityRegistry; // Address of the SecurityRegistry contract
-    string public baseTokenURI;
+    string private _baseTokenURI;
     
     /// @dev Custom errors for gas efficiency
     error InvalidAddress();
@@ -66,15 +65,15 @@ contract AuditNFT is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard {
     /// @notice Initializes the contract
     /// @param initialOwner Address that will own the contract
     /// @param _securityRegistry Address of the SecurityRegistry contract
-    /// @param _baseTokenURI Base URI for token metadata
+    /// @param baseURI Base URI for token metadata
     constructor(
         address initialOwner,
         address _securityRegistry,
-        string memory _baseTokenURI
+        string memory baseURI
     ) ERC721("ChainGuard Audit Certificate", "AUDIT") Ownable(initialOwner) {
         if (_securityRegistry == address(0)) revert InvalidAddress();
         securityRegistry = _securityRegistry;
-        baseTokenURI = _baseTokenURI;
+        _baseTokenURI = baseURI;
     }
     
     /// @notice Mint an audit certificate NFT (only callable by SecurityRegistry)
@@ -96,8 +95,8 @@ contract AuditNFT is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard {
         if (msg.sender != securityRegistry) revert NotAuthorized();
         if (to == address(0)) revert InvalidAddress();
         
-        _tokenIdCounter.increment();
-        uint256 tokenId = _tokenIdCounter.current();
+        _tokenIdCounter++;
+        uint256 tokenId = _tokenIdCounter;
         
         // Mint the NFT
         _safeMint(to, tokenId);
@@ -115,8 +114,8 @@ contract AuditNFT is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard {
         validCertificates[tokenId] = true;
         
         // Set token URI to IPFS metadata
-        string memory tokenURI = string(abi.encodePacked(baseTokenURI, ipfsHash));
-        _setTokenURI(tokenId, tokenURI);
+        string memory uri = string(abi.encodePacked(_baseTokenURI, ipfsHash));
+        _setTokenURI(tokenId, uri);
         
         emit CertificateMinted(tokenId, to, contractAddress, reportId);
         
@@ -145,10 +144,10 @@ contract AuditNFT is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard {
         if (!_isAuthorized(msg.sender, tokenId)) revert NotAuthorized();
         if (!validCertificates[tokenId]) revert CertificateNotValid();
         
-        string memory tokenURI = string(abi.encodePacked(baseTokenURI, ipfsHash));
-        _setTokenURI(tokenId, tokenURI);
+        string memory uri = string(abi.encodePacked(_baseTokenURI, ipfsHash));
+        _setTokenURI(tokenId, uri);
         
-        emit MetadataUpdated(tokenId, tokenURI);
+        emit MetadataUpdated(tokenId, uri);
     }
     
     /// @notice Get certificate details
@@ -182,7 +181,7 @@ contract AuditNFT is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard {
     /// @param contractAddress Address of the contract
     /// @return tokenIds Array of certificate token IDs for the contract
     function getContractCertificates(address contractAddress) external view returns (uint256[] memory) {
-        uint256 totalSupply = _tokenIdCounter.current();
+        uint256 totalSupply = _tokenIdCounter;
         uint256 count = 0;
         
         // First pass: count certificates for this contract
@@ -209,7 +208,7 @@ contract AuditNFT is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard {
     /// @notice Get total number of valid certificates
     /// @return count Number of valid certificates
     function getValidCertificatesCount() external view returns (uint256 count) {
-        uint256 totalSupply = _tokenIdCounter.current();
+        uint256 totalSupply = _tokenIdCounter;
         
         for (uint256 i = 1; i <= totalSupply; i++) {
             if (validCertificates[i]) {
@@ -219,10 +218,10 @@ contract AuditNFT is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard {
     }
     
     /// @notice Set base token URI
-    /// @param _baseTokenURI New base URI for token metadata
+    /// @param baseURI New base URI for token metadata
     /// @dev Only callable by contract owner
-    function setBaseTokenURI(string memory _baseTokenURI) external onlyOwner {
-        baseTokenURI = _baseTokenURI;
+    function setBaseTokenURI(string memory baseURI) external onlyOwner {
+        _baseTokenURI = baseURI;
     }
     
     /// @notice Set security registry address
@@ -271,14 +270,5 @@ contract AuditNFT is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard {
     /// @dev Override supportsInterface to include ERC721URIStorage
     function supportsInterface(bytes4 interfaceId) public view override(ERC721, ERC721URIStorage) returns (bool) {
         return super.supportsInterface(interfaceId);
-    }
-    
-    /// @dev Override _burn to clear certificate data
-    function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
-        super._burn(tokenId);
-        
-        // Clear certificate data
-        delete certificates[tokenId];
-        delete validCertificates[tokenId];
     }
 }

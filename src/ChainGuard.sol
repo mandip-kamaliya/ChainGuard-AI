@@ -5,7 +5,7 @@ import "./SecurityRegistry.sol";
 import "./AuditNFT.sol";
 import "./VulnerabilityScanner.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 /// @title ChainGuard
 /// @notice Main ChainGuard AI contract orchestrating security monitoring and audit certificates
@@ -180,8 +180,9 @@ contract ChainGuard is Ownable, ReentrancyGuard {
         bool isActive,
         uint256 scanInterval
     ) external {
-        if (msg.sender != monitoringConfigs[contractAddress].owner && 
-            msg.sender != owner()) revert NotAuthorized();
+        // Get the monitored contract info to check owner
+        (, address contractOwner,,,) = securityRegistry.monitoredContracts(contractAddress);
+        if (msg.sender != contractOwner && msg.sender != owner()) revert NotAuthorized();
         
         if (scanInterval < 60) revert InvalidInterval();
         
