@@ -50,7 +50,7 @@ contract InteractScript is Script {
         // Test contract addresses
         address[5] memory testContracts = [
             0x742d35Cc6634C0532925a3b8D4C9db96C4b4Db45, // BSC testnet contract
-            0x8Ba1f109551bD432803012645Hac136c22C56Bf532, // Mock contract
+            0x8Ba1f109551bD4328030126458ac136c22C56Bf532, // Mock contract
             0x1234567890123456789012345678901234567890, // Random address
             0x9876543210987654321098765432109876543210, // Random address
             0xABCDEF1234567890123456789012345678901234  // Random address
@@ -73,7 +73,7 @@ contract InteractScript is Script {
             }
             
             try chainGuard.registerContract(contractAddr, 3600) {
-                console.log("✅ Contract registered successfully");
+                console.log("Contract registered successfully");
                 
                 // Check registration status
                 (bool isActive, uint256 lastScan, uint256 scanCount, uint256 nextScan) = 
@@ -84,9 +84,9 @@ contract InteractScript is Script {
                 console.log("  - Next scan:", nextScan);
                 
             } catch Error(string memory reason) {
-                console.log("❌ Registration failed:", reason);
+                console.log("Registration failed:", reason);
             } catch (bytes memory lowLevelData) {
-                console.log("❌ Registration failed with low-level error");
+                console.log("Registration failed with low-level error");
                 console.log("  Error data:", lowLevelData);
             }
         }
@@ -109,11 +109,11 @@ contract InteractScript is Script {
         vm.startBroadcast(deployerPrivateKey);
         
         try chainGuard.registerContract(testContract, 3600) {
-            console.log("✅ Contract registered for vulnerability testing");
+            console.log("Contract registered for vulnerability testing");
             
             // Now test vulnerability scanning
             try chainGuard.scanContract(testContract) returns (uint256 reportId, uint256 certificateId) {
-                console.log("✅ Vulnerability scan completed");
+                console.log("Vulnerability scan completed");
                 console.log("  - Report ID:", reportId);
                 console.log("  - Certificate ID:", certificateId);
                 
@@ -135,7 +135,7 @@ contract InteractScript is Script {
                     string memory auditor,
                     bool isValid
                 ) {
-                    console.log("✅ Certificate details retrieved:");
+                    console.log("Certificate details retrieved:");
                     console.log("  - Report ID:", certReportId);
                     console.log("  - Contract:", contractAddress);
                     console.log("  - Max Severity:", maxSeverity);
@@ -143,18 +143,18 @@ contract InteractScript is Script {
                     console.log("  - Auditor:", auditor);
                     console.log("  - Valid:", isValid);
                 } catch {
-                    console.log("❌ Failed to get certificate details");
+                    console.log("Failed to get certificate details");
                 }
                 
             } catch Error(string memory reason) {
-                console.log("❌ Vulnerability scan failed:", reason);
+                console.log("Vulnerability scan failed:", reason);
             } catch (bytes memory lowLevelData) {
-                console.log("❌ Vulnerability scan failed with low-level error");
+                console.log("Vulnerability scan failed with low-level error");
                 console.log("  Error data:", lowLevelData);
             }
             
         } catch Error(string memory reason) {
-            console.log("❌ Contract registration failed:", reason);
+            console.log("Contract registration failed:", reason);
         }
         
         vm.stopBroadcast();
@@ -174,7 +174,7 @@ contract InteractScript is Script {
         
         // Test pause functionality
         try chainGuard.pauseContract(testContract) {
-            console.log("✅ Contract paused successfully");
+            console.log("Contract paused successfully");
             
             // Check pause status
             bool isPaused = securityRegistry.isPaused(testContract);
@@ -182,18 +182,18 @@ contract InteractScript is Script {
             
             // Test unpause
             try chainGuard.unpauseContract(testContract) {
-                console.log("✅ Contract unpaused successfully");
+                console.log("Contract unpaused successfully");
                 
                 // Check pause status again
                 isPaused = securityRegistry.isPaused(testContract);
                 console.log("  - Is paused after unpause:", isPaused);
                 
             } catch Error(string memory reason) {
-                console.log("❌ Unpause failed:", reason);
+                console.log("Unpause failed:", reason);
             }
             
         } catch Error(string memory reason) {
-            console.log("❌ Pause failed:", reason);
+            console.log("Pause failed:", reason);
         }
         
         vm.stopBroadcast();
@@ -208,7 +208,7 @@ contract InteractScript is Script {
         address testContract = 0x742d35Cc6634C0532925a3b8D4C9db96C4b4Db45;
         
         try chainGuard.getContractCertificates(testContract) returns (uint256[] memory certificateIds) {
-            console.log("✅ Retrieved certificates for contract");
+            console.log("Retrieved certificates for contract");
             console.log("  - Certificate count:", certificateIds.length);
             
             for (uint256 i = 0; i < certificateIds.length; i++) {
@@ -223,12 +223,12 @@ contract InteractScript is Script {
                 }
             }
         } catch Error(string memory reason) {
-            console.log("❌ Failed to get certificates:", reason);
+            console.log("Failed to get certificates:", reason);
         }
         
         // Test getting vulnerability reports
         try securityRegistry.getContractReports(testContract) returns (uint256[] memory reportIds) {
-            console.log("✅ Retrieved vulnerability reports for contract");
+            console.log("Retrieved vulnerability reports for contract");
             console.log("  - Report count:", reportIds.length);
             
             for (uint256 i = 0; i < reportIds.length; i++) {
@@ -259,7 +259,7 @@ contract InteractScript is Script {
                 }
             }
         } catch Error(string memory reason) {
-            console.log("❌ Failed to get reports:", reason);
+            console.log("Failed to get reports:", reason);
         }
     }
     
@@ -273,12 +273,12 @@ contract InteractScript is Script {
             uint256 totalScans,
             uint256 activeContracts
         ) {
-            console.log("✅ System statistics retrieved:");
+            console.log("System statistics retrieved:");
             console.log("  - Total contracts:", totalContracts);
             console.log("  - Total scans:", totalScans);
             console.log("  - Active contracts:", activeContracts);
         } catch Error(string memory reason) {
-            console.log("❌ Failed to get system stats:", reason);
+            console.log("Failed to get system stats:", reason);
         }
         
         // Test individual contract monitoring status
@@ -290,13 +290,13 @@ contract InteractScript is Script {
             uint256 scanCount,
             uint256 nextScan
         ) {
-            console.log("✅ Contract monitoring status:");
+            console.log("Contract monitoring status:");
             console.log("  - Active:", isActive);
             console.log("  - Last scan:", lastScan);
             console.log("  - Scan count:", scanCount);
             console.log("  - Next scan:", nextScan);
         } catch Error(string memory reason) {
-            console.log("❌ Failed to get monitoring status:", reason);
+            console.log("Failed to get monitoring status:", reason);
         }
     }
     
@@ -354,16 +354,16 @@ contract InteractScript is Script {
         console.log("Success rate:", (results.passedTests * 100) / results.totalTests, "%");
         
         console.log("\nIndividual test results:");
-        console.log("  - Contract Registration:", results.registrationSuccess ? "✅ PASS" : "❌ FAIL");
-        console.log("  - Vulnerability Reporting:", results.reportSubmissionSuccess ? "✅ PASS" : "❌ FAIL");
-        console.log("  - Pause/Unpause:", results.pauseSuccess ? "✅ PASS" : "❌ FAIL");
-        console.log("  - Report Reading:", results.readSuccess ? "✅ PASS" : "❌ FAIL");
-        console.log("  - System Stats:", results.passedTests >= 5 ? "✅ PASS" : "❌ FAIL");
+        console.log("  - Contract Registration:", results.registrationSuccess ? "PASS" : "FAIL");
+        console.log("  - Vulnerability Reporting:", results.reportSubmissionSuccess ? "PASS" : "FAIL");
+        console.log("  - Pause/Unpause:", results.pauseSuccess ? "PASS" : "FAIL");
+        console.log("  - Report Reading:", results.readSuccess ? "PASS" : "FAIL");
+        console.log("  - System Stats:", results.passedTests >= 5 ? "PASS" : "FAIL");
         
         if (results.passedTests == results.totalTests) {
-            console.log("\n🎉 ALL TESTS PASSED! ChainGuard AI is working correctly.");
+            console.log("ALL TESTS PASSED! ChainGuard AI is working correctly.");
         } else {
-            console.log("\n⚠️  Some tests failed. Please check the logs above.");
+            console.log("Some tests failed. Please check the logs above.");
         }
     }
     

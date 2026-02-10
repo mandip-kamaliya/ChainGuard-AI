@@ -7,6 +7,9 @@ import "../src/SecurityRegistry.sol";
 import "../src/AuditNFT.sol";
 
 contract VerifyScript is Script {
+    ChainGuard public chainGuard;
+    SecurityRegistry public securityRegistry;
+    AuditNFT public auditNFT;
     struct VerificationResult {
         bool chainGuardVerified;
         bool securityRegistryVerified;
@@ -92,27 +95,27 @@ contract VerifyScript is Script {
         // Verify ChainGuard contract
         try this._verifyChainGuard() {
             result.chainGuardVerified = true;
-            console.log("✅ ChainGuard contract verified");
+            console.log("ChainGuard contract verified");
         } catch Error(string memory reason) {
-            console.log("❌ ChainGuard verification failed:", reason);
+            console.log("ChainGuard verification failed:", reason);
             result.chainGuardVerified = false;
         }
         
         // Verify SecurityRegistry contract
         try this._verifySecurityRegistry() {
             result.securityRegistryVerified = true;
-            console.log("✅ SecurityRegistry contract verified");
+            console.log("SecurityRegistry contract verified");
         } catch Error(string memory reason) {
-            console.log("❌ SecurityRegistry verification failed:", reason);
+            console.log("SecurityRegistry verification failed:", reason);
             result.securityRegistryVerified = false;
         }
         
         // Verify AuditNFT contract
         try this._verifyAuditNFT() {
             result.auditNFTVerified = true;
-            console.log("✅ AuditNFT contract verified");
+            console.log("AuditNFT contract verified");
         } catch Error(string memory reason) {
-            console.log("❌ AuditNFT verification failed:", reason);
+            console.log("AuditNFT verification failed:", reason);
             result.auditNFTVerified = false;
         }
         
@@ -120,9 +123,9 @@ contract VerifyScript is Script {
         try this._getVerificationUrl() returns (string memory url) {
             result.verificationUrl = url;
             result.bscscanVerified = true;
-            console.log("✅ Verification URL generated:", url);
+            console.log("Verification URL generated:", url);
         } catch {
-            console.log("⚠️  Could not generate verification URL");
+            console.log("Could not generate verification URL");
             result.bscscanVerified = false;
         }
         
@@ -222,7 +225,7 @@ contract VerifyScript is Script {
         // 3. Submit source code for verification
         // 4. Poll for verification status
         
-        console.log("✅ Contract verification process initiated");
+        console.log("Contract verification process initiated");
         console.log("  Note: Automatic verification requires API keys and source code submission");
         console.log("  Please verify manually on the block explorer if needed");
     }
@@ -279,10 +282,10 @@ contract VerifyScript is Script {
     function _printVerificationResults(VerificationResult memory result) internal {
         console.log("\n=== VERIFICATION RESULTS ===");
         console.log("Verification timestamp:", result.verificationTimestamp);
-        console.log("ChainGuard verified:", result.chainGuardVerified ? "✅ YES" : "❌ NO");
-        console.log("SecurityRegistry verified:", result.securityRegistryVerified ? "✅ YES" : "❌ NO");
-        console.log("AuditNFT verified:", result.auditNFTVerified ? "✅ YES" : "❌ NO");
-        console.log("BSCScan verification:", result.bscscanVerified ? "✅ YES" : "❌ NO");
+        console.log("ChainGuard verified:", result.chainGuardVerified ? "YES" : "NO");
+        console.log("SecurityRegistry verified:", result.securityRegistryVerified ? "YES" : "NO");
+        console.log("AuditNFT verified:", result.auditNFTVerified ? "YES" : "NO");
+        console.log("BSCScan verification:", result.bscscanVerified ? "YES" : "NO");
         
         if (result.verificationUrl.length > 0) {
             console.log("Verification URL:", result.verificationUrl);
@@ -294,10 +297,10 @@ contract VerifyScript is Script {
                          result.auditNFTVerified;
         
         if (allVerified) {
-            console.log("\n🎉 ALL CONTRACTS VERIFIED SUCCESSFULLY!");
+            console.log("ALL CONTRACTS VERIFIED SUCCESSFULLY!");
             console.log("Your ChainGuard AI deployment is ready for production use.");
         } else {
-            console.log("\n⚠️  SOME VERIFICATIONS FAILED!");
+            console.log("SOME VERIFICATIONS FAILED!");
             console.log("Please check the error messages above and fix any issues.");
         }
         
