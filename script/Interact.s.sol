@@ -49,15 +49,15 @@ contract InteractScript is Script {
         address deployer = vm.addr(deployerPrivateKey);
         
         // Test contract addresses
-        address[] storage testContracts;
+        address[] memory testContracts = new address[](5);
+        
+        testContracts[0] = address(0x742D35cC6634C0532925a3B8d4c9dB96c4b4dB45); // BSC testnet contract
+        testContracts[1] = address(0x8Ba1F109551Bd432803012645ac136c22C56BF53); // Mock contract
+        testContracts[2] = address(0x1234567890123456789012345678901234567890); // Random address
+        testContracts[3] = address(0x9876543210987654321098765432109876543210); // Random address
+        testContracts[4] = address(0); // Zero address for testing
         
         vm.startBroadcast(deployerPrivateKey);
-        
-        testContracts.push(address(0x742D35cC6634C0532925a3B8d4c9dB96c4b4dB45)); // BSC testnet contract
-        testContracts.push(address(0x8Ba1F109551Bd432803012645ac136c22C56BF53)); // Mock contract
-        testContracts.push(address(0x1234567890123456789012345678901234567890)); // Random address
-        testContracts.push(address(0x9876543210987654321098765432109876543210)); // Random address
-        testContracts.push(address(0)); // Zero address for testing
         
         for (uint256 i = 0; i < testContracts.length; i++) {
             address contractAddr = testContracts[i];
