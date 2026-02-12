@@ -1,3 +1,5 @@
 /node_modules
 
 .env
+
+openclaw-agent/node_modules
