@@ -52,6 +52,7 @@ contract AuditNFT is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard {
     mapping(uint256 => bool) public validCertificates;
     
     address public securityRegistry; // Address of the SecurityRegistry contract
+    address public chainGuardAddress; // Address of the ChainGuard contract
     string private _baseTokenURI;
     
     /// @dev Custom errors for gas efficiency
@@ -73,6 +74,7 @@ contract AuditNFT is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard {
     ) ERC721("ChainGuard Audit Certificate", "AUDIT") Ownable(initialOwner) {
         if (_securityRegistry == address(0)) revert InvalidAddress();
         securityRegistry = _securityRegistry;
+        chainGuardAddress = msg.sender; // ChainGuard deploys this contract
         _baseTokenURI = baseURI;
     }
     
@@ -92,7 +94,7 @@ contract AuditNFT is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard {
         string memory auditor,
         string memory ipfsHash
     ) external nonReentrant returns (uint256) {
-        if (msg.sender != securityRegistry) revert NotAuthorized();
+        if (msg.sender != securityRegistry && msg.sender != chainGuardAddress) revert NotAuthorized();
         if (to == address(0)) revert InvalidAddress();
         
         _tokenIdCounter++;
@@ -230,6 +232,14 @@ contract AuditNFT is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard {
     function setSecurityRegistry(address _securityRegistry) external onlyOwner {
         if (_securityRegistry == address(0)) revert InvalidAddress();
         securityRegistry = _securityRegistry;
+    }
+    
+    /// @notice Update the ChainGuard contract address
+    /// @param _chainGuard New ChainGuard address
+    /// @dev Only callable by contract owner
+    function setChainGuardAddress(address _chainGuard) external onlyOwner {
+        if (_chainGuard == address(0)) revert InvalidAddress();
+        chainGuardAddress = _chainGuard;
     }
     
     /// @notice Get severity color for UI display

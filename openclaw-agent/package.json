@@ -1,0 +1,22 @@
+{
+    "name": "chainguard-openclaw-agent",
+    "version": "1.0.0",
+    "type": "module",
+    "description": "Autonomous Smart Contract Security Agent for BNB Chain — OpenClaw Hackathon",
+    "main": "src/index.js",
+    "scripts": {
+        "start": "node src/index.js",
+        "dev": "nodemon src/index.js",
+        "test": "jest"
+    },
+    "dependencies": {
+        "@anthropic-ai/sdk": "^0.27.0",
+        "web3": "^4.3.0",
+        "dotenv": "^16.3.1",
+        "node-telegram-bot-api": "^0.64.0",
+        "axios": "^1.6.2"
+    },
+    "devDependencies": {
+        "nodemon": "^3.0.1"
+    }
+}
