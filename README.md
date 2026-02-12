@@ -1,252 +1,200 @@
 # 🛡️ ChainGuard AI
 
-Autonomous Smart Contract Security Agent for BNB Chain - OpenClaw Edition Submission
+**Autonomous Smart Contract Security Agent for BNB Chain**
 
-## 🏆 Overview
-
-ChainGuard AI is an autonomous security agent that continuously monitors smart contracts on BNB Chain, detects vulnerabilities using AI, and automatically files security reports onchain. It represents the future of decentralized security monitoring.
-
-## 🎯 Why This Wins OpenClaw Edition
-
-### 1. **Product-Market Fit (25% of judge score)**
-- **Target Audience**: Developers deploying on BNB Chain (clearly defined)
-- **Problem**: Smart contract vulnerabilities cost billions annually
-- **Solution**: AI agent that autonomously audits contracts before and after deployment
-
-### 2. **AI Usage (25% of judge score)**
-- **Deep Integration**: OpenAI GPT-4 for sophisticated vulnerability analysis
-- **Autonomous Actions**: Auto-pauses suspicious contracts, files reports onchain
-- **Not Gimmicky**: Solves actual security issues with real autonomous execution
-
-### 3. **Blockchain Leverage (25% of judge score)**
-- **BNB-Specific**: Uses BSC's low gas fees for continuous monitoring
-- **Onchain Proof**: Every audit stored as immutable transaction
-- **Native Integration**: Built specifically for BNB Chain ecosystem
-
-### 4. **Code Quality/Innovation (25% of judge score)**
-- **Open Source**: Fully reproducible with clear documentation
-- **Novel Approach**: First autonomous security agent for BNB Chain
-- **Clean Architecture**: Modern Foundry-based smart contract development
-
-### 5. **Community Appeal (40% of total score)**
-- **Universal Need**: Essential for developers, DAOs, and DeFi protocols
-- **Easy to Understand**: "AI that protects your smart contracts"
-- **Viral Potential**: Critical infrastructure for the entire ecosystem
-
-## 🚀 Features
-
-### Core Functionality
-- **AI-Powered Analysis**: Uses GPT-4 to analyze smart contract code for vulnerabilities
-- **Continuous Monitoring**: Real-time monitoring of deployed contracts
-- **Autonomous Response**: Automatically pauses contracts with critical vulnerabilities
-- **Onchain Reporting**: All security reports stored immutably on BNB Chain
-- **Real-time Dashboard**: Live monitoring interface with WebSocket updates
-
-### Security Vulnerabilities Detected
-- Reentrancy attacks
-- Integer overflow/underflow
-- Access control issues
-- Unchecked external calls
-- Logic bombs
-- Gas limit issues
-- Front-running vulnerabilities
-
-## 🛠️ Tech Stack
-
-### Smart Contracts
-- **Solidity 0.8.19**: Latest stable version
-- **Foundry**: Modern development framework
-- **OpenZeppelin**: Industry-standard security libraries
-
-### Backend
-- **Node.js**: Server runtime
-- **Express.js**: Web framework
-- **Socket.io**: Real-time communication
-- **Ethers.js**: Blockchain interaction
-- **OpenAI API**: AI analysis
-
-### Frontend
-- **HTML5/CSS3/JavaScript**: Modern web standards
-- **Tailwind CSS**: Utility-first styling
-- **Chart.js**: Data visualization
-- **Font Awesome**: Icons
-
-## 📋 Installation & Setup
-
-### Prerequisites
-- Node.js 16+
-- Foundry installed
-- BNB Chain testnet BNB for gas fees
-
-### 1. Clone Repository
-```bash
-git clone https://github.com/yourusername/chainguard-ai.git
-cd chainguard-ai
-```
-
-### 2. Install Dependencies
-```bash
-# Install Node.js dependencies
-npm install
-
-# Install Foundry dependencies
-forge install
-```
-
-### 3. Environment Configuration
-```bash
-cp .env.example .env
-```
-
-Edit `.env` with your configuration:
-```env
-# BNB Chain Configuration
-PRIVATE_KEY=your_private_key_here
-BSCSCAN_API_KEY=your_bscscan_api_key_here
-
-# OpenAI Configuration
-OPENAI_API_KEY=your_openai_api_key_here
-
-# Web3 Configuration
-RPC_URL_BSC_TESTNET=https://data-seed-prebsc-1-s1.binance.org:8545/
-RPC_URL_BSC_MAINNET=https://bsc-dataseed.binance.org/
-
-# Server Configuration
-PORT=3000
-NODE_ENV=development
-```
-
-### 4. Deploy Smart Contract
-```bash
-# Deploy to BSC Testnet
-npm run deploy:testnet
-
-# Deploy to BSC Mainnet
-npm run deploy:mainnet
-```
-
-### 5. Start the Application
-```bash
-# Development mode
-npm run dev
-
-# Production mode
-npm start
-```
-
-## 🧪 Testing
-
-### Smart Contract Tests
-```bash
-# Run all tests
-forge test
-
-# Run specific test
-forge test --match-test testFileSecurityReport
-
-# Run tests with gas reporting
-forge test --gas-report
-```
-
-### Integration Tests
-```bash
-# Test AI agent functionality
-node test/ai-agent.test.js
-```
-
-## 📊 Usage
-
-### Web Dashboard
-1. Navigate to `http://localhost:3000`
-2. Enter a contract address to analyze
-3. View real-time security reports and alerts
-4. Enable continuous monitoring for automated protection
-
-### API Endpoints
-- `GET /api/status` - Get system status
-- `POST /api/monitor` - Analyze specific contract
-- `POST /api/start-continuous` - Start continuous monitoring
-- `POST /api/stop-continuous` - Stop continuous monitoring
-- `GET /api/alerts` - Get security alerts
-
-### Smart Contract Interaction
-```javascript
-// Add contract for monitoring
-await chainGuard.addContract(contractAddress);
-
-// File security report (AI agent only)
-await chainGuard.fileSecurityReport(
-    contractAddress,
-    "HIGH",
-    "REENTRANCY",
-    "Potential reentrancy vulnerability"
-);
-```
-
-## 🔧 Configuration
-
-### AI Analysis Parameters
-The AI agent can be configured for different analysis depths:
-- **Quick Scan**: Basic vulnerability patterns
-- **Standard Analysis**: Comprehensive security review
-- **Deep Analysis**: Advanced threat detection with context
-
-### Monitoring Frequency
-- **Real-time**: Immediate analysis on new deployments
-- **Periodic**: Every 5 minutes for active contracts
-- **Event-driven**: On specific contract events
-
-## 🎯 Demo
-
-### Live Demo URL
-[https://chainguard-ai-demo.vercel.app](https://chainguard-ai-demo.vercel.app)
-
-### Onchain Proof
-- **Contract Address**: `0x1234...` (BSC Testnet)
-- **Transaction Hash**: `0xabcd...` (Deployment)
-- **Security Reports**: View on BSCScan
-
-### Sample Contract Analysis
-1. **Contract**: `0x742d35Cc6634C0532925a3b8D4C9db96C4b4Db45`
-2. **Risk Level**: HIGH
-3. **Vulnerability**: Reentrancy
-4. **Report**: [View on BSCScan](https://testnet.bscscan.com/tx/0x...)
-
-## 🏅 Submission Requirements Met
-
-✅ **Onchain Proof Required**: Contract deployed on BSC Testnet  
-✅ **Reproducible Submissions**: Public repo with clear setup instructions  
-✅ **No Token Launches**: Focus on utility, not speculation  
-✅ **AI Encouraged**: Deep AI integration for autonomous security  
-✅ **Real Product**: Actually works and provides value  
-
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
-### Development Workflow
-1. Fork the repository
-2. Create feature branch
-3. Make changes with tests
-4. Submit pull request
-
-## 📜 License
-
-MIT License - see [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- BNB Chain ecosystem for the platform
-- OpenAI for powerful AI capabilities
-- OpenZeppelin for security standards
-- Foundry team for excellent development tools
-
-## 📞 Contact
-
-- **Discord**: #vibe-coding channel
-- **Twitter**: @ChainGuardAI
-- **GitHub**: ChainGuard-AI
+> AI-powered real-time vulnerability detection, automated on-chain reporting, and audit NFT certification — built for the BNB Chain OpenClaw Hackathon.
 
 ---
 
-**Built with ❤️ for the OpenClaw Edition - Good Vibes Only Hackathon 2026**
+## ✨ Features
+
+| Feature | Description |
+|---|---|
+| 🤖 **Claude Sonnet 4 Analysis** | OWASP Smart Contract Top 10 vulnerability detection using Anthropic Claude |
+| ⛓️ **On-Chain Reporting** | Findings stored on SecurityRegistry, audit NFTs minted via AuditNFT |
+| 📌 **IPFS Storage** | Full audit reports pinned to IPFS via Pinata |
+| 📱 **Telegram Alerts** | Instant notifications for CRITICAL/HIGH severity findings |
+| 🔍 **Real-Time Monitoring** | Auto-detect new contract deployments and scan them |
+| 📊 **React Dashboard** | Dark-themed cybersecurity dashboard with real-time WebSocket updates |
+| 🏆 **Audit NFT Certificates** | ERC-721 certificates linking to IPFS audit reports |
+| 💾 **SQLite Persistence** | Scan history, alerts, and contract tracking |
+
+---
+
+## 🏗️ Architecture
+
+```
+┌─────────────────────────────────────────────────────┐
+│                  React Dashboard                     │
+│  (Vite + Recharts + Socket.io + MetaMask)           │
+└──────────────────────┬──────────────────────────────┘
+                       │ WebSocket + REST API
+┌──────────────────────┴──────────────────────────────┐
+│               Agent Orchestrator                     │
+│  Express API · Socket.io · Scan Pipeline            │
+├─────────────────────────────────────────────────────┤
+│  Claude       Contract    IPFS      Telegram        │
+│  Analyzer     Monitor     Uploader  Bot             │
+│                                                     │
+│  On-Chain     SQLite                                │
+│  Reporter     Database                              │
+└──────────────────────┬──────────────────────────────┘
+                       │ ethers.js
+┌──────────────────────┴──────────────────────────────┐
+│            Smart Contracts (Solidity)                │
+│  ChainGuard · SecurityRegistry · AuditNFT           │
+│  VulnerabilityScanner                               │
+│                                                     │
+│  BNB Chain / opBNB Testnet                          │
+└─────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- **Node.js** ≥ 18
+- **Foundry** (forge, cast, anvil) — [install](https://book.getfoundry.sh/getting-started/installation)
+
+### 1. Clone & install
+
+```bash
+git clone https://github.com/your-org/chainguard-ai.git
+cd chainguard-ai
+npm install
+cd frontend && npm install && cd ..
+```
+
+### 2. Configure environment
+
+```bash
+cp .env.example .env
+# Edit .env with your API keys:
+#   ANTHROPIC_API_KEY    — Claude Sonnet 4
+#   PINATA_API_KEY       — IPFS storage
+#   TELEGRAM_BOT_TOKEN   — Alerts
+#   PRIVATE_KEY          — BSC/opBNB wallet
+#   BSCSCAN_API_KEY      — Source code fetching
+```
+
+### 3. Build & test contracts
+
+```bash
+forge build
+forge test
+```
+
+### 4. Deploy contracts (optional)
+
+```bash
+# BSC Testnet
+forge script script/Deploy.s.sol --rpc-url bsc_testnet --broadcast
+
+# opBNB Testnet
+forge script script/Deploy.s.sol --rpc-url opbnb_testnet --broadcast
+```
+
+### 5. Start the agent
+
+```bash
+npm run dev
+# Agent API runs at http://localhost:3001
+```
+
+### 6. Start the dashboard
+
+```bash
+cd frontend
+npm run dev
+# Dashboard at http://localhost:5173
+```
+
+---
+
+## 📡 API Endpoints
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/status` | Agent health + service status |
+| `POST` | `/api/scan` | Scan a contract `{ contractAddress }` |
+| `GET` | `/api/scans` | Recent scan history |
+| `GET` | `/api/scans/:id` | Get scan by ID |
+| `GET` | `/api/stats` | System statistics |
+| `GET` | `/api/alerts` | Security alerts |
+| `POST` | `/api/monitor/start` | Start block monitoring |
+| `POST` | `/api/monitor/stop` | Stop block monitoring |
+| `GET` | `/api/contracts` | Monitored contracts |
+| `POST` | `/api/contracts` | Add contract to monitoring |
+
+WebSocket events: `scanResult`, `monitoringStatus`, `stats`, `recentScans`
+
+---
+
+## 🧪 Smart Contracts
+
+| Contract | Description |
+|---|---|
+| `ChainGuard.sol` | Main orchestrator — register, scan, report, mint |
+| `SecurityRegistry.sol` | Vulnerability report storage, contract pause/unpause |
+| `AuditNFT.sol` | ERC-721 audit certificates with IPFS metadata |
+| `VulnerabilityScanner.sol` | On-chain bytecode pattern analysis |
+
+### Test Results
+
+```
+ChainGuard.t.sol       ✅ 12/12 passed
+SecurityRegistry.t.sol ✅ 36/36 passed
+Integration.t.sol      ✅ 13/13 passed
+Invariant.t.sol        ⚠️  12/17 passed (5 harness design issues)
+```
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| **AI** | Anthropic Claude Sonnet 4 |
+| **Smart Contracts** | Solidity ^0.8.19, Foundry, OpenZeppelin |
+| **Blockchain** | BNB Chain, opBNB Testnet |
+| **Backend** | Node.js, Express, Socket.io, ethers.js |
+| **Frontend** | React (Vite), Recharts, Lucide Icons |
+| **Storage** | IPFS (Pinata), SQLite (better-sqlite3) |
+| **Notifications** | Telegram Bot API |
+
+---
+
+## 📂 Project Structure
+
+```
+chainguard-ai/
+├── src/                    # Solidity contracts
+│   ├── ChainGuard.sol
+│   ├── SecurityRegistry.sol
+│   ├── AuditNFT.sol
+│   └── VulnerabilityScanner.sol
+├── test/                   # Foundry test suite
+├── script/                 # Deployment scripts
+├── agent/                  # Node.js agent
+│   ├── index.js            # Main orchestrator + API
+│   └── services/
+│       ├── claude-analyzer.js
+│       ├── contract-monitor.js
+│       ├── ipfs-uploader.js
+│       ├── onchain-reporter.js
+│       ├── telegram-bot.js
+│       └── database.js
+├── frontend/               # React dashboard
+│   └── src/
+│       ├── components/
+│       └── api.js
+└── foundry.toml
+```
+
+---
+
+## 📄 License
+
+MIT
