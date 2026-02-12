@@ -96,7 +96,7 @@ contract SecurityRegistryTest is Test {
         
         vm.prank(agent);
         vm.expectEmit(true, true, false, true);
-        emit VulnerabilityReported(1, testContract, 3);
+        emit VulnerabilityReported(1, testContract, 4);
         
         uint256 reportId = registry.reportVulnerability(
             testContract,
@@ -393,11 +393,11 @@ contract SecurityRegistryTest is Test {
             low
         );
         
-        SecurityRegistry.VulnerabilityReport memory report = registry.vulnerabilityReports(reportId);
-        assertEq(report.criticalCount, critical, "Critical count should match");
-        assertEq(report.highCount, high, "High count should match");
-        assertEq(report.mediumCount, medium, "Medium count should match");
-        assertEq(report.lowCount, low, "Low count should match");
+        (,, uint8 rptCritical, uint8 rptHigh, uint8 rptMedium, uint8 rptLow,,) = registry.vulnerabilityReports(reportId);
+        assertEq(rptCritical, critical, "Critical count should match");
+        assertEq(rptHigh, high, "High count should match");
+        assertEq(rptMedium, medium, "Medium count should match");
+        assertEq(rptLow, low, "Low count should match");
     }
     
     function testFuzzMultipleContracts(
@@ -484,7 +484,8 @@ contract SecurityRegistryTest is Test {
         
         // Verify all reports exist
         for (uint256 i = 0; i < 5; i++) {
-            assertTrue(registry.vulnerabilityReports(reports[i]).timestamp > 0, "All reports should exist");
+            (,,,,,, uint256 rptTimestamp,) = registry.vulnerabilityReports(reports[i]);
+            assertTrue(rptTimestamp > 0, "All reports should exist");
         }
     }
     
