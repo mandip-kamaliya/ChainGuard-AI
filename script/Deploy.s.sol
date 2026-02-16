@@ -17,8 +17,8 @@ contract DeployScript is Script {
     }
     
     function run() external {
-        // Load deployer private key from environment
-        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
+        // Load deployer private key from environment (supports hex format)
+        uint256 deployerPrivateKey = uint256(vm.envBytes32("PRIVATE_KEY"));
         address deployer = vm.addr(deployerPrivateKey);
         
         console.log("=== ChainGuard AI Deployment ===");
@@ -50,7 +50,7 @@ contract DeployScript is Script {
         });
         
         // Save deployment addresses to JSON
-        _saveDeploymentInfo(info);
+        // _saveDeploymentInfo(info);
         
         console.log("\n=== Deployment Complete ===");
         console.log("ChainGuard deployed at:", address(chainGuard));
@@ -64,7 +64,7 @@ contract DeployScript is Script {
     }
     
     function deploySeparately() external {
-        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
+        uint256 deployerPrivateKey = uint256(vm.envBytes32("PRIVATE_KEY"));
         address deployer = vm.addr(deployerPrivateKey);
         
         console.log("=== Separate Deployment Mode ===");
@@ -95,7 +95,7 @@ contract DeployScript is Script {
             timestamp: block.timestamp
         });
         
-        _saveDeploymentInfo(info);
+        // _saveDeploymentInfo(info);
         
         console.log("\n=== Separate Deployment Complete ===");
         console.log("SecurityRegistry:", address(registry));
@@ -107,7 +107,7 @@ contract DeployScript is Script {
         // Switch to BSC testnet
         vm.createSelectFork("bsc_testnet");
         
-        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
+        uint256 deployerPrivateKey = uint256(vm.envBytes32("PRIVATE_KEY"));
         address deployer = vm.addr(deployerPrivateKey);
         
         console.log("=== BSC Testnet Deployment ===");
@@ -130,7 +130,7 @@ contract DeployScript is Script {
         // Switch to opBNB testnet
         vm.createSelectFork("opbnb_testnet");
         
-        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
+        uint256 deployerPrivateKey = uint256(vm.envBytes32("PRIVATE_KEY"));
         address deployer = vm.addr(deployerPrivateKey);
         
         console.log("=== opBNB Testnet Deployment ===");
