@@ -1,4 +1,4 @@
-import Anthropic from "@anthropic-ai/sdk";
+import OpenAI from "openai";
 import { Web3 } from "web3";
 import TelegramBot from "node-telegram-bot-api";
 import { ContractMonitor } from "./monitors/ContractMonitor.js";
@@ -11,29 +11,45 @@ dotenv.config();
 
 class ChainGuardAgent {
     constructor() {
-        // ─── AI Engine ───
-        this.anthropic = new Anthropic({
-            apiKey: process.env.ANTHROPIC_API_KEY,
-        });
+        // ─── AI Engine (OpenAI GPT-4) ───
+        const apiKey = process.env.ANTHROPIC_API_KEY || process.env.OPENAI_API_KEY;
+
+        if (!apiKey || apiKey.includes("your_")) {
+            console.error("❌ ERROR: No OpenAI API key found!");
+            console.error("   Please set ANTHROPIC_API_KEY or OPENAI_API_KEY in your .env file");
+            process.exit(1);
+        }
+
+        this.openai = new OpenAI({ apiKey });
 
         // ─── Blockchain Providers ───
         this.web3BSC = new Web3(
             process.env.BSC_TESTNET_RPC_URL ||
+            process.env.RPC_URL_BSC_TESTNET ||
             "https://data-seed-prebsc-1-s1.binance.org:8545/"
         );
         this.web3opBNB = new Web3(
             process.env.OPBNB_TESTNET_RPC_URL ||
+            process.env.RPC_URL ||
             "https://opbnb-testnet-rpc.bnbchain.org"
         );
 
-        // ─── Telegram Bot ───
-        this.telegram = process.env.TELEGRAM_BOT_TOKEN
-            ? new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: true })
-            : null;
+        // ─── Telegram Bot (OPTIONAL) ───
+        this.telegram = null;
+        if (process.env.TELEGRAM_BOT_TOKEN && !process.env.TELEGRAM_BOT_TOKEN.includes("your_")) {
+            try {
+                this.telegram = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: true });
+                console.log("📱 Telegram bot enabled");
+            } catch (err) {
+                console.warn("⚠️  Telegram bot failed to initialize:", err.message);
+            }
+        } else {
+            console.log("📱 Telegram bot disabled (no token provided)");
+        }
 
         // ─── Service Modules ───
         this.monitor = new ContractMonitor(this.web3BSC, this.web3opBNB);
-        this.analyzer = new VulnerabilityAnalyzer(this.anthropic);
+        this.analyzer = new VulnerabilityAnalyzer(this.openai);
         this.reporter = new OnchainReporter(this.web3BSC);
         this.ipfs = new IPFSUploader();
 
@@ -49,13 +65,13 @@ class ChainGuardAgent {
         console.log("║     🛡️  ChainGuard AI — OpenClaw Agent         ║");
         console.log("╠════════════════════════════════════════════════╣");
         console.log(
-            `║  📡 BSC:    ${(process.env.BSC_TESTNET_RPC_URL || "default").slice(0, 35).padEnd(35)}║`
+            `║  📡 BSC:    ${(process.env.BSC_TESTNET_RPC_URL || process.env.RPC_URL_BSC_TESTNET || "default").slice(0, 35).padEnd(35)}║`
         );
         console.log(
-            `║  📡 opBNB:  ${(process.env.OPBNB_TESTNET_RPC_URL || "default").slice(0, 35).padEnd(35)}║`
+            `║  📡 opBNB:  ${(process.env.OPBNB_TESTNET_RPC_URL || process.env.RPC_URL || "default").slice(0, 35).padEnd(35)}║`
         );
         console.log(
-            `║  🤖 AI:     Claude Sonnet 4                   ║`
+            `║  🤖 AI:     OpenAI GPT-4                      ║`
         );
         console.log(
             `║  📱 Telegram: ${this.telegram ? "Enabled" : "Disabled"}                           ║`
@@ -85,7 +101,7 @@ class ChainGuardAgent {
             await this.handleNewContract(contractData);
         });
 
-        // ─── Setup Telegram commands ───
+        // ─── Setup Telegram commands (if enabled) ───
         if (this.telegram) {
             this.setupTelegramBot();
         }
@@ -107,8 +123,8 @@ class ChainGuardAgent {
         const startTime = Date.now();
 
         try {
-            // ── Step 1: Analyze with Claude ──
-            console.log("🤖 Running Claude vulnerability analysis...");
+            // ── Step 1: Analyze with OpenAI GPT-4 ──
+            console.log("🤖 Running OpenAI GPT-4 vulnerability analysis...");
             const vulnerabilities = await this.analyzer.analyze(code, address);
             this.scanCount++;
 
@@ -138,7 +154,7 @@ class ChainGuardAgent {
                 network,
                 vulnerabilities,
                 scanTimestamp: new Date().toISOString(),
-                agent: "ChainGuard AI v1.0.0",
+                agent: "ChainGuard AI v1.0.0 (OpenAI GPT-4)",
             });
 
             console.log(`📦 Report pinned to IPFS: ${ipfsHash}`);
@@ -160,7 +176,7 @@ class ChainGuardAgent {
                 );
             }
 
-            // ── Step 4: Telegram alert for critical/high ──
+            // ── Step 4: Telegram alert for critical/high (if enabled) ──
             if (counts.critical > 0 && this.telegram) {
                 await this.sendTelegramAlert(
                     address,
