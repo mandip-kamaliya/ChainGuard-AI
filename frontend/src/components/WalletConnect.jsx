@@ -20,23 +20,23 @@ function WalletConnect() {
             if (accounts.length > 0) {
                 setAccount(accounts[0]);
 
-                // Switch to BSC Testnet if not already
+                // Switch to Localhost (Anvil)
                 try {
                     await window.ethereum.request({
                         method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: '0x61' }] // BSC Testnet
+                        params: [{ chainId: '0x7a69' }] // Localhost 31337
                     });
                 } catch (switchError) {
-                    // Add BSC Testnet if not available
+                    // Add Localhost if not available
                     if (switchError.code === 4902) {
                         await window.ethereum.request({
                             method: 'wallet_addEthereumChain',
                             params: [{
-                                chainId: '0x61',
-                                chainName: 'BSC Testnet',
-                                rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
-                                nativeCurrency: { name: 'BNB', symbol: 'tBNB', decimals: 18 },
-                                blockExplorerUrls: ['https://testnet.bscscan.com']
+                                chainId: '0x7a69',
+                                chainName: 'Anvil Localhost',
+                                rpcUrls: ['http://127.0.0.1:8545'],
+                                nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+                                blockExplorerUrls: []
                             }]
                         });
                     }

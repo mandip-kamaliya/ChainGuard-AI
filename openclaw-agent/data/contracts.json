@@ -1,0 +1,70 @@
+{
+  "contracts": {
+    "0x12774379fb62442c07dd6f3376076c5241b34fa5": {
+      "address": "0x12774379fb62442c07dd6f3376076c5241b34fa5",
+      "network": "BSC Testnet",
+      "deployer": "0x55816f7d694495275148d00fd1e1a4be955798ae",
+      "blockNumber": 90657268,
+      "codeHash": "7a9a09c0",
+      "sourceAvailable": false,
+      "scanStatus": "pending",
+      "vulnerabilitiesFound": 0,
+      "ipfsHash": null,
+      "txHash": null,
+      "createdAt": "2026-02-16T08:14:30.707Z",
+      "scannedAt": null
+    },
+    "0x1d9c8f13305eea654f5e56766bc7f1e41f1ce989": {
+      "address": "0x1d9c8f13305eea654f5e56766bc7f1e41f1ce989",
+      "network": "BSC Testnet",
+      "deployer": "0xc6430de7aa1f6a314f730866a882babc439fe37d",
+      "blockNumber": 90657502,
+      "codeHash": "2e399a46",
+      "sourceAvailable": false,
+      "scanStatus": "pending",
+      "vulnerabilitiesFound": 0,
+      "ipfsHash": null,
+      "txHash": null,
+      "createdAt": "2026-02-16T08:16:18.455Z",
+      "scannedAt": null
+    },
+    "0x783c9b5cbe8e660c26b9f1efc20bc5dcef5579f2": {
+      "address": "0x783c9b5cbe8e660c26b9f1efc20bc5dcef5579f2",
+      "network": "BSC Testnet",
+      "deployer": "0xa01f57867bc23905dacb003de9e067bcf74a9f71",
+      "blockNumber": 90657971,
+      "codeHash": "27373f7f",
+      "sourceAvailable": false,
+      "scanStatus": "pending",
+      "vulnerabilitiesFound": 0,
+      "ipfsHash": null,
+      "txHash": null,
+      "createdAt": "2026-02-16T08:19:48.551Z",
+      "scannedAt": null
+    }
+  },
+  "scanLog": [
+    {
+      "id": 1,
+      "contractAddress": "0x12774379fb62442c07dd6f3376076c5241b34fa5",
+      "action": "detected",
+      "details": "New deployment on BSC Testnet, block #90657268",
+      "createdAt": "2026-02-16T08:14:30.712Z"
+    },
+    {
+      "id": 2,
+      "contractAddress": "0x1d9c8f13305eea654f5e56766bc7f1e41f1ce989",
+      "action": "detected",
+      "details": "New deployment on BSC Testnet, block #90657502",
+      "createdAt": "2026-02-16T08:16:18.458Z"
+    },
+    {
+      "id": 3,
+      "contractAddress": "0x783c9b5cbe8e660c26b9f1efc20bc5dcef5579f2",
+      "action": "detected",
+      "details": "New deployment on BSC Testnet, block #90657971",
+      "createdAt": "2026-02-16T08:19:48.553Z"
+    }
+  ],
+  "lastScan": null
+}
